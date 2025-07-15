@@ -1,41 +1,48 @@
-import { useEffect, useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import { supabase } from './lib/supabaseClient'; 
+import { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { supabase } from './lib/supabaseClient';
 
 function App() {
-  const [users, setUsers] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchUsers() {
-      const { data, error } = await supabase.from('users').select('*')
-      if (error) {
-        console.error('Error fetching users:', error)
-      } else {
-        console.log('Fetched users:', data);
-        setUsers(data || [])
+      try {
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) {
+          console.error('❌ Error fetching users:', error);
+        } else {
+          console.log('✅ Fetched users from Supabase:', data);
+          setUsers(data || []);
+        }
+      } catch (err) {
+        console.error('❗ Unexpected error:', err);
       }
     }
 
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
     <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Affiliate Genius 👋</h1>
-      <h2 className="text-lg font-semibold mb-2">User List</h2>
-      <ul className="list-disc pl-6">
-        {users.length === 0 ? (
-          <li>No users found</li>
+      <h1 className="text-3xl font-bold mb-4">
+        Affiliate Genius 👋
+      </h1>
+      <h2 className="text-xl font-semibold">User List</h2>
+      <ul>
+        {users.length > 0 ? (
+          users.map((user) => (
+            <li key={user.id}>
+              {user.full_name} ({user.email})
+            </li>
+          ))
         ) : (
-          users.map((user) => <li key={user.id}>{user.email}</li>)
+          <li>No users found</li>
         )}
       </ul>
     </main>
-  )
+  );
 }
 
-const container = document.getElementById('root')
-const root = createRoot(container!)
-root.render(<App />)
-
-
+const root = createRoot(document.getElementById('root')!);
+root.render(<App />);
