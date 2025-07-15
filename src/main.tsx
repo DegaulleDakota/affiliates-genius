@@ -7,16 +7,12 @@ function App() {
 
   useEffect(() => {
     async function fetchUsers() {
-      try {
-        const { data, error } = await supabase.from('users').select('*');
-        if (error) {
-          console.error('❌ Error fetching users:', error);
-        } else {
-          console.log('✅ Fetched users from Supabase:', data);
-          setUsers(data || []);
-        }
-      } catch (err) {
-        console.error('❗ Unexpected error:', err);
+      const { data, error } = await supabase.from('users').select('*');
+      if (error) {
+        console.error('Error fetching users:', error);
+      } else {
+        console.log('Fetched users:', data);
+        setUsers(data || []);
       }
     }
 
@@ -25,15 +21,13 @@ function App() {
 
   return (
     <main className="p-4">
-      <h1 className="text-3xl font-bold mb-4">
-        Affiliate Genius 👋
-      </h1>
-      <h2 className="text-xl font-semibold">User List</h2>
+      <h1 className="text-3xl font-bold mb-4">Affiliate Genius 👋</h1>
+      <h2 className="text-xl font-semibold mb-2">User List</h2>
       <ul>
         {users.length > 0 ? (
           users.map((user) => (
             <li key={user.id}>
-              {user.full_name} ({user.email})
+              {user.full_name} – {user.email}
             </li>
           ))
         ) : (
@@ -44,5 +38,6 @@ function App() {
   );
 }
 
-const root = createRoot(document.getElementById('root')!);
+const container = document.getElementById('root')!;
+const root = createRoot(container);
 root.render(<App />);
