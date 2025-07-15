@@ -11,6 +11,7 @@ function App() {
       if (error) {
         console.error('Error fetching users:', error)
       } else {
+        console.log('Fetched users:', data);
         setUsers(data || [])
       }
     }
